@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Seeker</title>
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="js/seeker.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/seeker.css">
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var source = [
+				{ name: 'Juan', 'age': 20 },
+				{ name: 'Pedro', 'age': 18 },
+				{ name: 'Amy', 'age': 22 }
+			];
+
+			var ageSeeker = $('#seekerAge').seeker({
+				'source': source,
+				seekField: 'age',
+				width: 100,
+				onSelected: function(index, item) {
+					
+				}
+			});
+
+			var nameSeeker = $('#seekerName').seeker({
+				'source': source,
+				seekField: 'name',
+				onSelected: function() {
+
+				}
+			});
+
+			ageSeeker.setPeerSeeker(nameSeeker);
+			nameSeeker.setPeerSeeker(ageSeeker);
+		});
+	</script>
+</head>
+<body>
+	<input id="seekerAge" type="text" /> 
+	<input id="seekerName" type="text" /> 
+</body>
+</html>
