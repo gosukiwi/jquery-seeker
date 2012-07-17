@@ -1,5 +1,9 @@
 div.seeker-container {
 	display: inline-block;
+	vertical-align: top;
+	/* IE 7 HACK */
+	zoom: 1;
+	*display: inline;
 }
 
 table.seeker-outter {

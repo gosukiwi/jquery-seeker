@@ -14,7 +14,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		this.settings = $.extend({	// Default options
 			source: [],				// The source is an array of objects
 			seekField: null,		// The field of the object used to seek
-			url: null,				// If specified will make a POST request to the given URL to get the source as JSON
+			url: undefined,			// If specified will make a POST request to the given URL to get the source as JSON
 			method: 'POST',			// POST by default, can be GET, used for the AJAX request if the URL is set
 			onSelected: undefined,	// Callback function for when an item is selected
 			visibleFields: [],		// Used to specify what fields of the object are visible in the seeker, if empty, all are shown
@@ -28,22 +28,69 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		this.filteredSource = [];
 
 		// Pubic methods
+		this.indexOf = function(item, arr) {
+			var i;
+
+			for(i = 0; i < arr.length; i++) {
+				if(this.deepEqual(arr[i], item)) {
+					return i;
+				}
+			}
+
+			return -1;
+		};
+
+		this.deepEqual = function (x, y) {
+			if (x === y) { return true; }
+			if (!(x instanceof Object) || !(y instanceof Object)) { return false; }
+			if (x.constructor !== y.constructor) { return false; }
+
+			for (var p in x) {
+				// other properties were tested using x.constructor === y.constructor
+				if (x.hasOwnProperty(p)) {
+					// allows to compare x[ p ] and y[ p ] when set to undefined
+					if (!y.hasOwnProperty(p)) { return false; }
+
+					// if they have the same strict value or identity then they are equal
+					if (x[p] === y[p]) { continue; }
+
+					// Numbers, Strings, Functions, Booleans must be strictly equal
+					if (typeof (x[p]) !== "object") { return false; }
+
+					// Objects and Arrays must be tested recursively
+					if (!this.deepEqual(x[p], y[p])) { return false; }
+				}
+			}
+
+			for (p in y) {
+				// allows x[ p ] to be set to undefined
+				if (y.hasOwnProperty(p) && !x.hasOwnProperty(p)) { return false; }
+			}
+
+			return true;
+		};
+
 		this.setSelectedIndex = function(item) {
 			var index, result;
 
-			index = this.source.indexOf(item);
-			result = this.source[index];
-			this.val(result[this.settings.seekField]);
-			this._buildTable(this.source);
-			this.filteredSource = [];
+			index = this.indexOf(item, this.source); // Deep comparison
 
-			if(autocompleteInterval) {
-				clearInterval(autocompleteInterval);
+			if(index > -1) {
+				result = this.source[index];
+				this.val(result[this.settings.seekField]);
+				this._buildTable(this.source);
+				this.filteredSource = [];
+
+				if(autocompleteInterval) {
+					clearInterval(autocompleteInterval);
+				}
+
+				if(this.settings.onSelected) {
+					this.settings.onSelected(index, result);
+				}
 			}
 
-			if(this.settings.onSelected) {
-				this.settings.onSelected(index, result);
-			}
+			table = $('#' + this.id + '-table').hide();
 		};
 
 		this.setPeerSeeker = function(seeker) {
@@ -76,6 +123,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			for(i = 0; i < data.length; i++) {
 				row = '<tr id="' + id + '-' + i + '">';
 				obj = data[i];
+				console.log(obj);
 
 				if(this.settings.visibleFields.length > 0) {
 					j = 1;
@@ -110,8 +158,6 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				if(global_seeker.settings.peerSeeker) {
 					global_seeker.settings.peerSeeker.setSelectedIndex(item);
 				}
-
-				table.hide();
 			});
 		};
 
@@ -136,9 +182,27 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			}
 		};
 
-		for(i = 0; i < this.settings.source.length; i++) { 
-			// Copy manually, arrays are passed by reference, and if I share a variable to instantate several seekers it will break
-			this.source.push(this.settings.source[i]);
+		id = this.id;
+		global_seeker = this;	// Used to access this from callback functions
+
+		// If we have to make an AJAX request, let's do that now
+		if(this.settings.url) {
+			$.ajax({
+				type: this.settings.method,
+				contentType: "application/json; charset=utf-8",
+				url: this.settings.url,
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					global_seeker.settings.source = data;
+					global_seeker.source = data;
+				}
+			});
+		} else {
+			for(i = 0; i < this.settings.source.length; i++) { 
+				// Copy manually, arrays are passed by reference, and if I share a variable to instantate several seekers it will break
+				this.source.push(this.settings.source[i]);
+			}
 		}
 
 		// Check if I have to sort
@@ -156,10 +220,6 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				}
 			});
 		}
-
-		id = this.id;
-
-		global_seeker = this;	// Used to access this from callback functions
 
 		// Markup setup
 		this.addClass('seeker-text');
@@ -254,29 +314,4 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 		return this;
 	};
-
-	if (!Array.prototype.indexOf)
-	{
-		Array.prototype.indexOf = function(elt /*, from*/)
-		{
-			var len = this.length;
-			var from = Number(arguments[1]) || 0;
-			from = (from < 0) ? Math.ceil(from) : Math.floor(from);
-
-			if (from < 0) {
-				from += len;
-			}
-
-			while (from < len)
-			{
-				if (from in this && this[from] === elt) {
-					return from;
-				}
-
-				from++;
-			}
-
-			return -1;
-		};
-	}
 })(jQuery);

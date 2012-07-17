@@ -5,12 +5,14 @@
 	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="js/seeker.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/seeker.css">
+	<!--[if lt IE 9]>
+		<link rel="stylesheet" type="text/css" href="css/seeker-ie.css" />
+	<![endif]-->
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var source = [
-				{ name: 'Juan', 'age': 20 },
-				{ name: 'Pedro', 'age': 18 },
-				{ name: 'Amy', 'age': 22 }
+				{ name: "Mike", age: "20" },
+				{ name: "John", age: "22" }
 			];
 
 			var ageSeeker = $('#seekerAge').seeker({
