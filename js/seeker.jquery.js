@@ -225,11 +225,9 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		this.addClass('seeker-text');
 		this.wrap('<div class="seeker-container" />');
 		this.after('<table class="seeker-outter" id="' + id + '-table"></table>');
-		this.after('<input type="hidden" id="' + id + '-selected-index" value="" />');
-
-		table = $('#' + id + '-table');
-
 		this.css('width', this.settings.width);
+
+		table = $('#' + id + '-table');		
 		
 		this._buildTable(this.source);
 
