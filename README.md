@@ -7,12 +7,12 @@ The functionality is pretty similar to an autocomplete.
 
 ## HTML
 
-<code><input id="seekerAge" type="text" /> 
-<input id="seekerName" type="text" /></code>
+<pre><code>&lt;input id="seekerAge" type="text" /&gt;
+&lt;input id="seekerName" type="text" /&gt;</code></pre>
 
 ## Javascript
 
-<code>$(document).ready(function() {
+<pre><code>$(document).ready(function() {
 	var source = [
 		{ name: "Mike", age: "20" },
 		{ name: "John", age: "22" },
@@ -38,11 +38,11 @@ The functionality is pretty similar to an autocomplete.
 
 	ageSeeker.setPeerSeeker(nameSeeker);
 	nameSeeker.setPeerSeeker(ageSeeker);
-});</code>
+});</code></pre>
 
 Default configuration
 
-<code>{	
+<pre><code>{	
 	source: [],				// The source is an array of objects
 	seekField: null,		// The field of the object used to seek
 	url: undefined,			// If specified will make a POST request to the given URL to get the source as JSON
@@ -53,7 +53,7 @@ Default configuration
 	peerSeeker: null,		// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
 	width: 200,				// The width of the seeker textbox
 	autocompleteInterval: 1500	// Ammounts of seconds to wait before trying to autocomplete the seeker, set to 0 to disable it
-}</code>
+}</code></pre>
 
 # Notes
 
