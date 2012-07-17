@@ -40,7 +40,7 @@ The functionality is pretty similar to an autocomplete.
 	nameSeeker.setPeerSeeker(ageSeeker);
 });</code></pre>
 
-Default configuration
+# Default configuration
 
 <pre><code>{	
 	source: [],				// The source is an array of objects
