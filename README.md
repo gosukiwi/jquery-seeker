@@ -3,16 +3,16 @@ For example, having an ID, and a NAME, user can choose an item by ID or NAME.
 
 The functionality is pretty similar to an autocomplete.
 
-Example usage
+# Example usage
 
-HTML
+## HTML
 
-<input id="seekerAge" type="text" /> 
-<input id="seekerName" type="text" /> 
+<code><input id="seekerAge" type="text" /> 
+<input id="seekerName" type="text" /></code>
 
-Javascript
+## Javascript
 
-$(document).ready(function() {
+<code>$(document).ready(function() {
 	var source = [
 		{ name: "Mike", age: "20" },
 		{ name: "John", age: "22" },
@@ -38,11 +38,11 @@ $(document).ready(function() {
 
 	ageSeeker.setPeerSeeker(nameSeeker);
 	nameSeeker.setPeerSeeker(ageSeeker);
-});
+});</code>
 
 Default configuration
 
-{	
+<code>{	
 	source: [],				// The source is an array of objects
 	seekField: null,		// The field of the object used to seek
 	url: undefined,			// If specified will make a POST request to the given URL to get the source as JSON
@@ -53,8 +53,8 @@ Default configuration
 	peerSeeker: null,		// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
 	width: 200,				// The width of the seeker textbox
 	autocompleteInterval: 1500	// Ammounts of seconds to wait before trying to autocomplete the seeker, set to 0 to disable it
-}
+}</code>
 
-Notes
+# Notes
 
-* When a seeker's onSelected event is called, it's also called on it's peer seeker, so you only need to handle one event.
+*	When a seeker's onSelected event is called, it's also called on it's peer seeker, so you only need to handle one event.
