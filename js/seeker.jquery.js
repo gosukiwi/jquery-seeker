@@ -21,7 +21,8 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			order: 'ASC',			// null if no order wanted, ASC for sort the source by seekField ASCENDING, DESC for descending order
 			peerSeeker: null,		// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
 			width: 200,				// The width of the seeker textbox
-			autocompleteInterval: 1500	// Ammounts of seconds to wait before trying to autocomplete the seeker, set to 0 to disable it
+			autocompleteInterval: 1500,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
+			orderBy: undefined		// If you want to sort by a field that's not the seekField
 		}, options);
 		this.id = this.attr('id');
 		this.source = [];
@@ -123,7 +124,6 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			for(i = 0; i < data.length; i++) {
 				row = '<tr id="' + id + '-' + i + '">';
 				obj = data[i];
-				console.log(obj);
 
 				if(this.settings.visibleFields.length > 0) {
 					j = 1;
@@ -207,13 +207,13 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 		// Check if I have to sort
 		if(this.settings.order !== null) {
-			seekField = this.settings.seekField;
+			i = this.settings.orderBy || this.settings.seekField;
 			isDesc = this.settings.order === 'DESC';
 
 			this.source.sort(function(a, b){
-				if(a[seekField] === b[seekField]) {
+				if(a[i] === b[i]) {
 					return 0;
-				} else if((isDesc && a[seekField] > b[seekField]) || (!isDesc && a[seekField] < b[seekField])) {
+				} else if((isDesc && a[i] > b[i]) || (!isDesc && a[i] < b[i])) {
 					return -1;
 				} else {
 					return 1;
