@@ -224,7 +224,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		// Markup setup
 		this.addClass('seeker-text');
 		this.wrap('<div class="seeker-container" />');
-		this.after('<div class="seeker-table-container"><table class="seeker-outter" id="' + id + '-table"></table></div>');
+		this.after('<div class="seeker-table-container" id="seeker-table-container-' + id + '"><table class="seeker-outter" id="' + id + '-table"></table></div>');
 		this.css('width', this.settings.width);
 
 		table = $('#' + id + '-table');

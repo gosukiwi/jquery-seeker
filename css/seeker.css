@@ -24,6 +24,9 @@ div.seeker-table-container {
 	overflow-y: auto;
 	overflow-x: hidden;
 	margin-right: 10px;
+	position: absolute;
+	left: 0px;
+	top: 24px;
 }
 
 table.seeker-outter tr:hover {
