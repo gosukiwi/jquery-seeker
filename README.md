@@ -40,9 +40,11 @@ The functionality is pretty similar to an autocomplete.
 	nameSeeker.setPeerSeeker(ageSeeker);
 });</code></pre>
 
+For more examples, see the examples folder.
+
 # Default configuration
 
-<pre><code>{	
+<pre><code>{
 	source: [],				// The source is an array of objects
 	seekField: null,		// The field of the object used to seek
 	url: undefined,			// If specified will make a POST request to the given URL to get the source as JSON
@@ -52,7 +54,7 @@ The functionality is pretty similar to an autocomplete.
 	order: 'ASC',			// null if no order wanted, ASC for sort the source by seekField ASCENDING, DESC for descending order
 	peerSeeker: null,		// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
 	width: 200,				// The width of the seeker textbox
-	autocompleteInterval: 1500,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
+	autocompleteInterval: 2000,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 	orderBy: undefined		// If you want to sort by a field that's not the seekField
 }</code></pre>
 

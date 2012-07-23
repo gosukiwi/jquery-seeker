@@ -21,7 +21,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			order: 'ASC',			// null if no order wanted, ASC for sort the source by seekField ASCENDING, DESC for descending order
 			peerSeeker: null,		// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
 			width: 200,				// The width of the seeker textbox
-			autocompleteInterval: 1500,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
+			autocompleteInterval: 2000,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 			orderBy: undefined		// If you want to sort by a field that's not the seekField
 		}, options);
 		this.id = this.attr('id');
@@ -224,10 +224,10 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		// Markup setup
 		this.addClass('seeker-text');
 		this.wrap('<div class="seeker-container" />');
-		this.after('<table class="seeker-outter" id="' + id + '-table"></table>');
+		this.after('<div class="seeker-table-container"><table class="seeker-outter" id="' + id + '-table"></table></div>');
 		this.css('width', this.settings.width);
 
-		table = $('#' + id + '-table');		
+		table = $('#' + id + '-table');
 		
 		this._buildTable(this.source);
 

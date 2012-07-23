@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Seeker</title>
+	<script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="../js/seeker.jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/seeker.css">
+	<!--[if lt IE 9]>
+		<link rel="stylesheet" type="text/css" href="../css/seeker-ie.css" />
+	<![endif]-->
+	<script type="text/javascript">
+		function CreateRandomString() {
+			var text = "",
+		    possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+		    i;
+
+		    for(i=0; i < 5; i++) {
+		        text += possible.charAt(Math.floor(Math.random() * possible.length));
+		    }
+
+		    return text;
+		}
+
+		$(document).ready(function() {
+			var source = [],
+			i;
+
+			for(i = 0; i < 100; i++) {
+				source.push({
+					'name': CreateRandomString(),
+					'age': Math.floor(Math.random() * 100 + 18)
+				});
+			}
+
+			var ageSeeker = $('#seekerAge').seeker({
+				'source': source,
+				seekField: 'age',
+				width: 100,
+				onSelected: function(index, item) {
+					
+				}
+			});
+
+			var nameSeeker = $('#seekerName').seeker({
+				'source': source,
+				seekField: 'name',
+				onSelected: function() {
+
+				}
+			});
+
+			ageSeeker.setPeerSeeker(nameSeeker);
+			nameSeeker.setPeerSeeker(ageSeeker);
+		});
+	</script>
+</head>
+<body>
+	<h1>Peer Seekers, many items</h1>
+	<p>In this example you can see how two seekers show the same data in different order</p>
+
+	<input id="seekerAge" type="text" /> 
+	<input id="seekerName" type="text" /> 
+</body>
+</html>

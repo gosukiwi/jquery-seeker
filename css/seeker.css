@@ -16,9 +16,14 @@ table.seeker-outter {
 	font-family: Arial;
 	font-size: 11px;
 	margin-left: 5px;
-	min-width: 100px;
-	max-height: 250px;
-	overflow: auto;
+	min-width: 80px;
+}
+
+div.seeker-table-container {
+	max-height: 150px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	margin-right: 10px;
 }
 
 table.seeker-outter tr:hover {
@@ -57,4 +62,41 @@ input[type=text].seeker-text {
 	font-size: 11px;
 	border-radius: 5px;
 	width: 200px;
+}
+
+.seeker-table-container::-webkit-scrollbar{
+	width: 7px;
+	height: 10px;
+	border-left: solid 1 #000;
+}
+
+.seeker-table-container::-webkit-scrollbar-button:start:decrement{
+	display:block;
+	height:5px;
+}
+
+.seeker-table-container::-webkit-scrollbar-button:end:increment{
+	display:block;
+	height:5px;
+}
+
+.seeker-table-container::-webkit-scrollbar-button:vertical:increment{
+	background-color:transparent;
+}
+
+.seeker-table-container::-webkit-scrollbar-track:enabled{
+	background-color:rgba(113,112,107,0.1);
+	-webkit-border-radius:5px;
+}
+
+.seeker-table-container::-webkit-scrollbar-thumb:vertical{
+	height:50px;
+	background-color:rgba(0,0,0,.2);
+	-webkit-border-radius:5px;
+}
+
+.seeker-table-container::-webkit-scrollbar-thumb:horizontal{
+	width:50px;
+	background-color:rgba(0,0,0,.2);
+	-webkit-border-radius:5px;
 }
