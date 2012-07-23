@@ -6,11 +6,59 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 (function($) {
 	"use strict"; // JSHint
 
+	var Helper = function(){};
+
+	Helper.prototype.indexOf = function(item, arr) {
+		var i;
+
+		for(i = 0; i < arr.length; i++) {
+			if(Helper.prototype.deepEqual(arr[i], item)) {
+				return i;
+			}
+		}
+
+		return -1;
+	};
+
+	Helper.prototype.deepEqual = function (x, y) {
+		if (x === y) { return true; }
+		if (!(x instanceof Object) || !(y instanceof Object)) { return false; }
+		if (x.constructor !== y.constructor) { return false; }
+
+		for (var p in x) {
+			// other properties were tested using x.constructor === y.constructor
+			if (x.hasOwnProperty(p)) {
+				// allows to compare x[ p ] and y[ p ] when set to undefined
+				if (!y.hasOwnProperty(p)) { return false; }
+
+				// if they have the same strict value or identity then they are equal
+				if (x[p] === y[p]) { continue; }
+
+				// Numbers, Strings, Functions, Booleans must be strictly equal
+				if (typeof (x[p]) !== "object") { return false; }
+
+				// Objects and Arrays must be tested recursively
+				if (!Helper.prototype.deepEqual(x[p], y[p])) { return false; }
+			}
+		}
+
+		for (p in y) {
+			// allows x[ p ] to be set to undefined
+			if (y.hasOwnProperty(p) && !x.hasOwnProperty(p)) { return false; }
+		}
+
+		return true;
+	};
+
+	Helper.prototype.clamp = function(num, min, max) {
+		return (num < min) ? min : (num > max) ? max : num;
+	}
+
 	$.fn.seeker = function(options) {	// Constructor
 		var i, table, row, id, button, hasFocus, hasCursor, tableDown,
 		global_seeker, seekField, isDesc, autocompleteInterval;
 
-		// Public attributes
+		// Configuration
 		this.settings = $.extend({	// Default options
 			source: [],				// The source is an array of objects
 			seekField: null,		// The field of the object used to seek
@@ -24,57 +72,20 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			autocompleteInterval: 2000,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 			orderBy: undefined		// If you want to sort by a field that's not the seekField
 		}, options);
+
+		// Public attributes
 		this.id = this.attr('id');
 		this.source = [];
 		this.filteredSource = [];
+		this.selectedIndex = -1;
 
 		// Pubic methods
-		this.indexOf = function(item, arr) {
-			var i;
-
-			for(i = 0; i < arr.length; i++) {
-				if(this.deepEqual(arr[i], item)) {
-					return i;
-				}
-			}
-
-			return -1;
-		};
-
-		this.deepEqual = function (x, y) {
-			if (x === y) { return true; }
-			if (!(x instanceof Object) || !(y instanceof Object)) { return false; }
-			if (x.constructor !== y.constructor) { return false; }
-
-			for (var p in x) {
-				// other properties were tested using x.constructor === y.constructor
-				if (x.hasOwnProperty(p)) {
-					// allows to compare x[ p ] and y[ p ] when set to undefined
-					if (!y.hasOwnProperty(p)) { return false; }
-
-					// if they have the same strict value or identity then they are equal
-					if (x[p] === y[p]) { continue; }
-
-					// Numbers, Strings, Functions, Booleans must be strictly equal
-					if (typeof (x[p]) !== "object") { return false; }
-
-					// Objects and Arrays must be tested recursively
-					if (!this.deepEqual(x[p], y[p])) { return false; }
-				}
-			}
-
-			for (p in y) {
-				// allows x[ p ] to be set to undefined
-				if (y.hasOwnProperty(p) && !x.hasOwnProperty(p)) { return false; }
-			}
-
-			return true;
-		};
-
 		this.setSelectedIndex = function(item) {
-			var index, result;
+			var index, result, helper;
 
-			index = this.indexOf(item, this.source); // Deep comparison
+			helper = new Helper();
+
+			index = helper.indexOf(item, this.source); // Deep comparison
 
 			if(index > -1) {
 				result = this.source[index];
@@ -89,9 +100,13 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				if(this.settings.onSelected) {
 					this.settings.onSelected(index, result);
 				}
+
+				this.selectedIndex = index;
 			}
 
+			// Rebuild table so the selected item is updated
 			table = $('#' + this.id + '-table').hide();
+			this._buildTable(this.source);
 		};
 
 		this.setPeerSeeker = function(seeker) {
@@ -122,7 +137,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			table.empty();
 
 			for(i = 0; i < data.length; i++) {
-				row = '<tr id="' + id + '-' + i + '">';
+				row = '<tr ' + ((this.selectedIndex > -1 && i == this.selectedIndex) ? 'class="seeker-selected"' : '') + ' id="' + id + '-' + i + '">';
 				obj = data[i];
 
 				if(this.settings.visibleFields.length > 0) {
@@ -224,7 +239,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		// Markup setup
 		this.addClass('seeker-text');
 		this.wrap('<div class="seeker-container" />');
-		this.after('<div class="seeker-table-container" id="seeker-table-container-' + id + '"><table class="seeker-outter" id="' + id + '-table"></table></div>');
+		this.after('<div class="seeker-table-container"><table class="seeker-outter" id="' + id + '-table"></table></div>');
 		this.css('width', this.settings.width);
 
 		table = $('#' + id + '-table');
@@ -298,6 +313,29 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		});
 
 		this.bind('keyup', function(e){
+			if(e.keyCode === 40 || e.keyCode === 38) {
+				// If down arrow pressed
+				var index = global_seeker.selectedIndex + (e.keyCode === 40 ? 1 : -1),
+				helper = new Helper();
+
+				index = helper.clamp(index, 0, global_seeker.source.length - 1);
+
+				global_seeker.setSelectedIndex(global_seeker.source[index]);
+				table.show();
+
+				if(global_seeker.settings.peerSeeker) {
+					global_seeker.settings.peerSeeker.setSelectedIndex(global_seeker.source[index]);
+				}
+
+				return;
+			}
+
+			if(e.keyCode === 13) {
+				// If enter key pressed
+				table.hide();
+				return;
+			}
+
 			global_seeker._filterSource($(this).val());
 			table.show();
 

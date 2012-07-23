@@ -34,6 +34,10 @@ table.seeker-outter tr:hover {
 	cursor: pointer;
 }
 
+table.seeker-outter tr.seeker-selected {
+	background-color: #d1d1d1;
+}
+
 div.seeker-container {
 	position: relative;
 }
