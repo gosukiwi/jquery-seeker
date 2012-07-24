@@ -52,25 +52,30 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 	Helper.prototype.clamp = function(num, min, max) {
 		return (num < min) ? min : (num > max) ? max : num;
-	}
+	};
+
+	Helper.prototype.parseField = function(str, len) {
+		return (len === 0 || str.length < len) ? str : str.substring(0, len) + '...';
+	};
 
 	$.fn.seeker = function(options) {	// Constructor
 		var i, table, row, id, button, hasFocus, hasCursor, tableDown,
 		global_seeker, seekField, isDesc, autocompleteInterval;
 
 		// Configuration
-		this.settings = $.extend({	// Default options
-			source: [],				// The source is an array of objects
-			seekField: null,		// The field of the object used to seek
-			url: undefined,			// If specified will make a POST request to the given URL to get the source as JSON
-			method: 'POST',			// POST by default, can be GET, used for the AJAX request if the URL is set
-			onSelected: undefined,	// Callback function for when an item is selected
-			visibleFields: [],		// Used to specify what fields of the object are visible in the seeker, if empty, all are shown
-			order: 'ASC',			// null if no order wanted, ASC for sort the source by seekField ASCENDING, DESC for descending order
-			peerSeeker: null,		// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
-			width: 200,				// The width of the seeker textbox
+		this.settings = $.extend({		// Default options
+			source: [],					// The source is an array of objects
+			seekField: null,			// The field of the object used to seek
+			url: undefined,				// If specified will make a POST request to the given URL to get the source as JSON
+			method: 'POST',				// POST by default, can be GET, used for the AJAX request if the URL is set
+			onSelected: undefined,		// Callback function for when an item is selected
+			visibleFields: [],			// Used to specify what fields of the object are visible in the seeker, if empty, all are shown
+			order: 'ASC',				// null if no order wanted, ASC for sort the source by seekField ASCENDING, DESC for descending order
+			peerSeeker: null,			// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
+			width: 200,					// The width of the seeker textbox
 			autocompleteInterval: 2000,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
-			orderBy: undefined		// If you want to sort by a field that's not the seekField
+			orderBy: undefined,			// If you want to sort by a field that's not the seekField
+			maxFieldLength: 0			// If you want to truncate the values, length or characters allowed, 0 to disable
 		}, options);
 
 		// Public attributes
@@ -131,29 +136,30 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		};
 
 		this._buildTable = function(data) {
-			var row, obj, i, j, item, table, field;
+			var row, obj, i, j, item, table, field, helper;
 
+			helper = new Helper();
 			table = $('#' + this.id + '-table');
 			table.empty();
 
 			for(i = 0; i < data.length; i++) {
-				row = '<tr ' + ((this.selectedIndex > -1 && i == this.selectedIndex) ? 'class="seeker-selected"' : '') + ' id="' + id + '-' + i + '">';
+				row = '<tr ' + ((this.selectedIndex > -1 && i === this.selectedIndex) ? 'class="seeker-selected"' : '') + ' id="' + id + '-' + i + '">';
 				obj = data[i];
 
 				if(this.settings.visibleFields.length > 0) {
 					j = 1;
 					for(field in this.settings.visibleFields) {
 						if(obj[this.settings.visibleFields[field]]) {
-							row += '<td class="col-' + j + '">' + obj[this.settings.visibleFields[field]] + '</td>';
+							row += '<td class="col-' + j + '">' + helper.parseField(obj[this.settings.visibleFields[field]], this.settings.maxFieldLength) + '</td>';
 							j++;
 						}
 					}
 				} else {
-					row += '<td class="col-1">' + obj[this.settings.seekField] + '</td>';
+					row += '<td class="col-1">' + helper.parseField(obj[this.settings.seekField], this.settings.maxFieldLength) + '</td>';
 					j = 1;
 					for(item in obj) {
 						if(obj[item] && item !== this.settings.seekField) {
-							row += '<td class="col-' + j + '">' + obj[item] + '</td>';
+							row += '<td class="col-' + j + '">' + helper.parseField(obj[item], this.settings.maxFieldLength) + '</td>';
 							j++;
 						}
 					}
@@ -315,7 +321,8 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		this.bind('keyup', function(e){
 			if(e.keyCode === 40 || e.keyCode === 38) {
 				// If down arrow pressed
-				var index = global_seeker.selectedIndex + (e.keyCode === 40 ? 1 : -1),
+				var increment = (e.keyCode === 40 ? 1 : -1),
+				index = global_seeker.selectedIndex + increment,
 				helper = new Helper();
 
 				index = helper.clamp(index, 0, global_seeker.source.length - 1);
