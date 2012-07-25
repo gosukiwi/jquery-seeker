@@ -60,7 +60,8 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 	$.fn.seeker = function(options) {	// Constructor
 		var i, table, row, id, button, hasFocus, hasCursor, tableDown,
-		global_seeker, seekField, isDesc, autocompleteInterval;
+		global_seeker, seekField, isDesc, autocompleteInterval, scrollable,
+		scrollableHasCursor;
 
 		// Configuration
 		this.settings = $.extend({		// Default options
@@ -75,7 +76,8 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			width: 200,					// The width of the seeker textbox
 			autocompleteInterval: 2000,	// Ammount of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 			orderBy: undefined,			// If you want to sort by a field that's not the seekField
-			maxFieldLength: 0			// If you want to truncate the values, length of characters allowed, 0 to disable
+			maxFieldLength: 0,			// If you want to truncate the values, length of characters allowed, 0 to disable
+			dropDownSameWith: true 		// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
 		}, options);
 
 		// Public attributes
@@ -251,12 +253,18 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		this.css('width', this.settings.width);
 
 		table = $('#' + id + '-table');
+		scrollable = table.parent();
+
+		if(this.settings.dropDownSameWith) {
+			table.width(this.width());
+		}
 		
 		this._buildTable(this.source);
 
 		// Add button
 		hasFocus = false;
 		hasCursor = false;
+		scrollableHasCursor = false;
 		tableDown = false;
 
 		this.after('<input type="button" value="" id="' + id + '-button" class="seeker-button" />');
@@ -272,6 +280,10 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			hasCursor = false;
 			if(!hasFocus) {
 				button.hide();
+			}
+
+			if(!scrollableHasCursor) {
+				table.hide();
 			}
 		});
 
@@ -314,7 +326,13 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			tableDown = true;
 		});
 
-		table.bind('mouseleave', function() {
+		scrollable.bind('mouseenter', function(){
+			scrollableHasCursor = true;
+		});
+
+		scrollable.bind('mouseleave', function() {
+			scrollableHasCursor = false;
+
 			if(!hasFocus && !hasCursor) {
 				table.hide();
 			}
