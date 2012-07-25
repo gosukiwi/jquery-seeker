@@ -60,6 +60,28 @@ For more examples, see the examples folder.
 	dropDownSameWitdh: true 	// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
 }</code></pre>
 
+# Public Methods
+
+There are some public methods available to add some more utility to the seeker.
+
+## setSelectedItem
+
+Sets the selected item of the seeker. Using the example above, we can set a selected item as follows
+
+<pre><code>ageSeeker.setSelectedItem(source[0]);
+// You can also do
+ageSeeker.setSelectedItem({ name: "Mike", age: "20" });</code></pre>
+
+Note that you have to pass the full object as parameter, otherwise it won't work, as it does a full deep comparison
+
+## setPeerSeeker
+
+Used to set a peer seeker. Peer sekers are bound by selected item, this means, everytime you select an item in a seeker, it will also update the selected item on it's peer seeker, and vice versa. Peer seekers must use the same source, as they are different views for the same data, basically. Peer seekers will always have the same value.
+
+## getSelectedItem
+
+Gets the selected item. This method shouldn't be necessary as whenever an item is selected, your callback function will be executed with the selected item itself, but it's included for the sake of completeness. You might want to do some complicated behaviour, in which case, you can use this function.
+
 # Notes
 
 *	When a seeker's onSelected event is called, it's also called on it's peer seeker, so you only need to handle one event.

@@ -96,7 +96,15 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		}
 
 		// Pubic methods
-		this.setSelectedIndex = function(item) {
+		this.getSelectedItem = function() {
+			if(this.selectedIndex > -1) {
+				return this.source[this.selectedIndex];
+			}
+
+			return undefined;
+		};
+
+		this.setSelectedItem = function(item) {
 			var index, result, helper;
 
 			helper = new Helper();
@@ -192,10 +200,10 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			$('#' + id + '-table tr').bind('click', function(e) {
 				var index = this.id.split('-')[1],
 				item = me.filteredSource.length > 0 ? me.filteredSource[index] : me.source[index];
-				me.setSelectedIndex(item);
+				me.setSelectedItem(item);
 
 				if(me.settings.peerSeeker) {
-					me.settings.peerSeeker.setSelectedIndex(item);
+					me.settings.peerSeeker.setSelectedItem(item);
 				}
 			});
 		};
@@ -208,10 +216,10 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				item = me.source[i][me.settings.seekField].toString().toLowerCase();
 				if(item.indexOf(text) === 0) {
 					result = me.source[i];
-					me.setSelectedIndex(result);
+					me.setSelectedItem(result);
 
 					if(me.settings.peerSeeker) {
-						me.settings.peerSeeker.setSelectedIndex(result);
+						me.settings.peerSeeker.setSelectedItem(result);
 					}
 
 					table.hide();
@@ -363,12 +371,12 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 				index = helper.clamp(index, 0, me.source.length - 1);
 
-				me.setSelectedIndex(me.source[index]);
+				me.setSelectedItem(me.source[index]);
 				table.show();
 				me._updateScroll(table, me.selectedIndex, me.source.length);
 
 				if(me.settings.peerSeeker) {
-					me.settings.peerSeeker.setSelectedIndex(me.source[index]);
+					me.settings.peerSeeker.setSelectedItem(me.source[index]);
 				}
 
 				return;
