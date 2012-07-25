@@ -60,7 +60,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 	$.fn.seeker = function(options) {	// Constructor
 		var i, table, row, id, button, hasFocus, hasCursor, tableDown,
-		global_seeker, seekField, isDesc, autocompleteInterval, scrollable,
+		me, seekField, isDesc, autocompleteInterval, scrollable,
 		scrollableHasCursor;
 
 		// Configuration
@@ -85,6 +85,15 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		this.source = [];
 		this.filteredSource = [];
 		this.selectedIndex = -1;
+
+		// Validate settings
+		if(this.settings.seekField === null) {
+			throw "Seek Field not found";
+		}
+
+		if(this.settings.source === [] && this.settings.url === undefined) {
+			throw "Source not specified";
+		}
 
 		// Pubic methods
 		this.setSelectedIndex = function(item) {
@@ -144,7 +153,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		this._updateScroll = function(table, index, total) {
 			var padding = table.parent().outerHeight() / 2;
 			table.parent().scrollTop((table.parent()[0].scrollHeight * (index / total)) - padding);
-		}
+		};
 
 		this._buildTable = function(data) {
 			var row, obj, i, j, item, table, field, helper;
@@ -182,27 +191,27 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 			$('#' + id + '-table tr').bind('click', function(e) {
 				var index = this.id.split('-')[1],
-				item = global_seeker.filteredSource.length > 0 ? global_seeker.filteredSource[index] : global_seeker.source[index];
-				global_seeker.setSelectedIndex(item);
+				item = me.filteredSource.length > 0 ? me.filteredSource[index] : me.source[index];
+				me.setSelectedIndex(item);
 
-				if(global_seeker.settings.peerSeeker) {
-					global_seeker.settings.peerSeeker.setSelectedIndex(item);
+				if(me.settings.peerSeeker) {
+					me.settings.peerSeeker.setSelectedIndex(item);
 				}
 			});
 		};
 
 		this._checkForAutocomplete = function() {
 			var i, item, result,
-			text = global_seeker.val();
+			text = me.val();
 
-			for(i = 0; i < global_seeker.source.length; i++) {
-				item = global_seeker.source[i][global_seeker.settings.seekField].toString().toLowerCase();
+			for(i = 0; i < me.source.length; i++) {
+				item = me.source[i][me.settings.seekField].toString().toLowerCase();
 				if(item.indexOf(text) === 0) {
-					result = global_seeker.source[i];
-					global_seeker.setSelectedIndex(result);
+					result = me.source[i];
+					me.setSelectedIndex(result);
 
-					if(global_seeker.settings.peerSeeker) {
-						global_seeker.settings.peerSeeker.setSelectedIndex(result);
+					if(me.settings.peerSeeker) {
+						me.settings.peerSeeker.setSelectedIndex(result);
 					}
 
 					table.hide();
@@ -213,7 +222,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		};
 
 		id = this.id;
-		global_seeker = this;	// Used to access this from callback functions
+		me = this;	// Used to access this from callback functions
 
 		// If we have to make an AJAX request, let's do that now
 		if(this.settings.url) {
@@ -224,8 +233,8 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				dataType: "json",
 				async: false,
 				success: function (data) {
-					global_seeker.settings.source = data;
-					global_seeker.source = data;
+					me.settings.source = data;
+					me.source = data;
 				}
 			});
 		} else {
@@ -322,14 +331,14 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		});
 
 		button.bind('click', function() {
-			if(global_seeker.filteredSource.length > 0) {
-				global_seeker.filteredSource = [];
-				global_seeker._buildTable(global_seeker.source);
+			if(me.filteredSource.length > 0) {
+				me.filteredSource = [];
+				me._buildTable(me.source);
 			}
 
 			table.show();
 			tableDown = true;
-			global_seeker._updateScroll(table, global_seeker.selectedIndex, global_seeker.source.length);
+			me._updateScroll(table, me.selectedIndex, me.source.length);
 		});
 
 		scrollable.bind('mouseenter', function(){
@@ -347,19 +356,19 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 		this.bind('keyup', function(e){
 			if(e.keyCode === 40 || e.keyCode === 38) {
-				// If down arrow pressed
+				// If down or up arrows pressed
 				var increment = (e.keyCode === 40 ? 1 : -1),
-				index = global_seeker.selectedIndex + increment,
+				index = me.selectedIndex + increment,
 				helper = new Helper();
 
-				index = helper.clamp(index, 0, global_seeker.source.length - 1);
+				index = helper.clamp(index, 0, me.source.length - 1);
 
-				global_seeker.setSelectedIndex(global_seeker.source[index]);
+				me.setSelectedIndex(me.source[index]);
 				table.show();
-				global_seeker._updateScroll(table, global_seeker.selectedIndex, global_seeker.source.length);
+				me._updateScroll(table, me.selectedIndex, me.source.length);
 
-				if(global_seeker.settings.peerSeeker) {
-					global_seeker.settings.peerSeeker.setSelectedIndex(global_seeker.source[index]);
+				if(me.settings.peerSeeker) {
+					me.settings.peerSeeker.setSelectedIndex(me.source[index]);
 				}
 
 				return;
@@ -371,15 +380,15 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				return;
 			}
 
-			global_seeker._filterSource($(this).val());
+			me._filterSource($(this).val());
 			table.show();
 
-			if(global_seeker.settings.autocompleteInterval > 0) {
+			if(me.settings.autocompleteInterval > 0) {
 				if(autocompleteInterval) {
 					clearInterval(autocompleteInterval);
 				}
 
-				autocompleteInterval = setInterval(global_seeker._checkForAutocomplete, global_seeker.settings.autocompleteInterval);
+				autocompleteInterval = setInterval(me._checkForAutocomplete, me.settings.autocompleteInterval);
 			}
 		});
 
