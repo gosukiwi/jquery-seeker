@@ -73,9 +73,9 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			order: 'ASC',				// null if no order wanted, ASC for sort the source by seekField ASCENDING, DESC for descending order
 			peerSeeker: null,			// The peer seeker, if specified, it will update the index of the peer seeker every time this one changes
 			width: 200,					// The width of the seeker textbox
-			autocompleteInterval: 2000,	// Ammounts of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
+			autocompleteInterval: 2000,	// Ammount of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 			orderBy: undefined,			// If you want to sort by a field that's not the seekField
-			maxFieldLength: 0			// If you want to truncate the values, length or characters allowed, 0 to disable
+			maxFieldLength: 0			// If you want to truncate the values, length of characters allowed, 0 to disable
 		}, options);
 
 		// Public attributes
@@ -108,6 +108,10 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 				this.selectedIndex = index;
 			}
+
+			// Now I have to set the scrollbar accordingly
+			var padding = table.parent().outerHeight() / 2;
+			table.parent().scrollTop((table.parent()[0].scrollHeight * (index / this.source.length)) - padding);
 
 			// Rebuild table so the selected item is updated
 			table = $('#' + this.id + '-table').hide();
@@ -168,8 +172,6 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				row += '</tr>';
 				table.append(row);
 			}
-
-			table.css('width', this.width() - 20);
 
 			$('#' + id + '-table tr').bind('click', function(e) {
 				var index = this.id.split('-')[1],

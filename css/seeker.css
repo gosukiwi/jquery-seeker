@@ -16,7 +16,11 @@ table.seeker-outter {
 	font-family: Arial;
 	font-size: 11px;
 	margin-left: 5px;
-	min-width: 80px;
+	min-width: 180px;
+}
+
+table.seeker-outter td {
+	height: 13px;
 }
 
 div.seeker-table-container {
