@@ -77,7 +77,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			autocompleteInterval: 2000,	// Ammount of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 			orderBy: undefined,			// If you want to sort by a field that's not the seekField
 			maxFieldLength: 0,			// If you want to truncate the values, length of characters allowed, 0 to disable
-			dropDownSameWith: true 		// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
+			dropDownSameWidth: true 	// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
 		}, options);
 
 		// Public attributes
@@ -255,7 +255,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		table = $('#' + id + '-table');
 		scrollable = table.parent();
 
-		if(this.settings.dropDownSameWith) {
+		if(this.settings.dropDownSameWidth) {
 			table.width(this.width());
 		}
 		
