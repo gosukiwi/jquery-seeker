@@ -77,7 +77,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			autocompleteInterval: 2000,	// Ammount of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 			orderBy: undefined,			// If you want to sort by a field that's not the seekField
 			maxFieldLength: 0,			// If you want to truncate the values, length of characters allowed, 0 to disable
-			dropDownSameWidth: true 	// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
+			dropDownSameWidth: true		// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
 		}, options);
 
 		// Public attributes
@@ -140,6 +140,11 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 			this._buildTable(this.filteredSource);
 		};
+
+		this._updateScroll = function(table, index, total) {
+			var padding = table.parent().outerHeight() / 2;
+			table.parent().scrollTop((table.parent()[0].scrollHeight * (index / total)) - padding);
+		}
 
 		this._buildTable = function(data) {
 			var row, obj, i, j, item, table, field, helper;
@@ -324,10 +329,12 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 			table.show();
 			tableDown = true;
+			global_seeker._updateScroll(table, global_seeker.selectedIndex, global_seeker.source.length);
 		});
 
 		scrollable.bind('mouseenter', function(){
 			scrollableHasCursor = true;
+			table.show();
 		});
 
 		scrollable.bind('mouseleave', function() {
@@ -349,6 +356,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 				global_seeker.setSelectedIndex(global_seeker.source[index]);
 				table.show();
+				global_seeker._updateScroll(table, global_seeker.selectedIndex, global_seeker.source.length);
 
 				if(global_seeker.settings.peerSeeker) {
 					global_seeker.settings.peerSeeker.setSelectedIndex(global_seeker.source[index]);
