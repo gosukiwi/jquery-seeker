@@ -82,6 +82,27 @@ Used to set a peer seeker. Peer sekers are bound by selected item, this means, e
 
 Gets the selected item. This method shouldn't be necessary as whenever an item is selected, your callback function will be executed with the selected item itself, but it's included for the sake of completeness. You might want to do some complicated behaviour, in which case, you can use this function.
 
+# Useful CSS configuration
+The seeker is highly dependant of the CSS configuration. You can change almost all the visuals of the seeker modifying this file, but there are some definitions that should be remarked.
+
+## Setting the drop-down's minimum width
+By default, width of the drop-down table is the same as the input, but when the input is too small, this might be bad for our table, as each row will be split into several lines. You can fix this by using the maxFieldLength configuration, but this is intended for very long fields, this is when modifying the minimum width of the table is useful.
+
+In the css there's a selector _table.seeker-outter_, this is the table of each seeker, you can modify the min-width property according to your needs, the default value is _180px_.
+
+<pre><code>table.seeker-outter {
+	...
+	min-width: 180px; /* set the min width here */
+}</code></pre>
+
+## Changing the drop-down's position
+The drop-down position is defined on the css, assuming the input's css is untouched. If margins, paddings or heights are modified, then there's a chance the drop-down top position won't be correct. To change this, just update the _top_ property of the _div.seeker-table-container_ selector.
+
+<pre><code>div.seeker-table-container {
+	...
+	top: 24px;
+}</code></pre>
+
 # Notes
 
 *	When a seeker's onSelected event is called, it's also called on it's peer seeker, so you only need to handle one event.

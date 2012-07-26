@@ -344,9 +344,12 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 				me._buildTable(me.source);
 			}
 
-			table.show();
-			tableDown = true;
-			me._updateScroll(table, me.selectedIndex, me.source.length);
+			if(table.css('display') === 'none') {
+				table.show();
+				me._updateScroll(table, me.selectedIndex, me.source.length);
+			} else {
+				table.hide();
+			}
 		});
 
 		scrollable.bind('mouseenter', function(){
