@@ -74,10 +74,6 @@ ageSeeker.setSelectedItem({ name: "Mike", age: "20" });</code></pre>
 
 Note that you have to pass the full object as parameter, otherwise it won't work, as it does a full deep comparison
 
-## setPeerSeeker
-
-Used to set a peer seeker. Peer sekers are bound by selected item, this means, everytime you select an item in a seeker, it will also update the selected item on it's peer seeker, and vice versa. Peer seekers must use the same source, as they are different views for the same data, basically. Peer seekers will always have the same value.
-
 ## getSelectedItem
 
 Gets the selected item. This method shouldn't be necessary as whenever an item is selected, your callback function will be executed with the selected item itself, but it's included for the sake of completeness. You might want to do some complicated behaviour, in which case, you can use this function.
@@ -103,6 +99,10 @@ This method lets you update the source of the seeker. Remember to update it on t
 <pre><code>mySeeker.setSource([{name:"My name", age:"28"}]);
 // or
 mySeeker.setSource(myNewSource);</code></pre>
+
+## setPeerSeeker
+
+Used to set a peer seeker. Peer sekers are bound by selected item, this means, everytime you select an item in a seeker, it will also update the selected item on it's peer seeker, and vice versa. Peer seekers must use the same source, as they are different views for the same data, basically. Peer seekers will always have the same value.
 
 # Useful CSS configuration
 The seeker is highly dependant of the CSS configuration. You can change almost all the visuals of the seeker modifying this file, but there are some definitions that should be remarked.

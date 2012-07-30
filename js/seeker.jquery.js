@@ -3,6 +3,9 @@ jQuery Seeker Plugin
 Author: Federico Ramirez <fedra.arg@gmail.com>
 Copyright: Paradigma Del Sur - http://paradigma.com.ar
 */
+
+// This is the cache for AJAX requests.
+var __jquerySeekerPluginAjaxCache = [];
 (function($) {
 	"use strict"; // JSHint
 
@@ -145,13 +148,15 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 
 		// Sets the selected index of the seeker
 		this.setSelectedIndex = function(index) {
-			this.source[index] && this.setSelectedItem(this.source[index]);
+			if(this.source[index]) {
+				this.setSelectedItem(this.source[index]);
+			}
 		};
 
 		// Gets the selected index of the seeker
 		this.getSelectedIndex = function() {
 			return this.selectedIndex;
-		}
+		};
 
 		// Sets the peer seeker of this instance
 		this.setPeerSeeker = function(seeker) {
@@ -169,7 +174,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			}
 			this._buildTable(this.source);
 			this.val('');
-		}
+		};
 
 		// Private methods
 		this._filterSource = function(text) {
@@ -260,21 +265,32 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 		};
 
 		id = this.id;
-		me = this;	// Used to access this from callback functions
+		me = this;	// Used to access 'this' from callback functions
 
 		// If we have to make an AJAX request, let's do that now
 		if(this.settings.url) {
-			$.ajax({
-				type: this.settings.method,
-				contentType: "application/json; charset=utf-8",
-				url: this.settings.url,
-				dataType: "json",
-				async: false,
-				success: function (data) {
-					me.settings.source = data;
-					me.source = data;
-				}
-			});
+			var key = this.settings.url + '.' + this.settings.method, // This is a key we use to store AJAX cache
+			content;
+
+			// Check for AJAX cache
+			if(__jquerySeekerPluginAjaxCache[key]) {
+				content = __jquerySeekerPluginAjaxCache[key];
+				me.settings.source = content;
+				me.source = content;
+			} else {
+				$.ajax({
+					type: this.settings.method,
+					contentType: "application/json; charset=utf-8",
+					url: this.settings.url,
+					dataType: "json",
+					async: false,
+					success: function (data) {
+						me.settings.source = data;
+						me.source = data;
+						__jquerySeekerPluginAjaxCache[key] = data;
+					}
+				});
+			}
 		} else {
 			for(i = 0; i < this.settings.source.length; i++) { 
 				// Copy manually, arrays are passed by reference, and if I share a variable to instantiate several seekers it will break!
