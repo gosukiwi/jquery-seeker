@@ -86,6 +86,10 @@ Gets the selected item. This method shouldn't be necessary as whenever an item i
 
 This method lets you update the source of the seeker. Remember to update it on the peer seeker too!
 
+<pre><code>mySeeker.setSource([{name:"My name", age:"28"}]);
+// or
+mySeeker.setSource(myNewSource);</code></pre>
+
 # Useful CSS configuration
 The seeker is highly dependant of the CSS configuration. You can change almost all the visuals of the seeker modifying this file, but there are some definitions that should be remarked.
 
