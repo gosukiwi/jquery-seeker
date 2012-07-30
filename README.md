@@ -57,8 +57,71 @@ For more examples, see the examples folder.
 	autocompleteInterval: 2000,	// Ammount of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 	orderBy: undefined,			// If you want to sort by a field that's not the seekField
 	maxFieldLength: 0,			// If you want to truncate the values, length of characters allowed, 0 to disable
-	dropDownSameWitdh: true 	// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
+	dropDownSameWidth: true,	// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
+	columnsWidth: []			// The width of the table columns
 }</code></pre>
+
+## source
+
+This is the source of the seeker, it's an array of objects. All objects should have the same attributes.
+
+## seekField
+
+This is the field the seeker uses to find when the user types, and also the one in displays when an item is selected.
+
+## url
+
+If you want to get the source from an URL which returns JSON, just specify the URL, this is cached, so many seekers can use the same URL (especially the peer seeker)
+
+## method
+
+If an URL is specified, it will use the specified method and make a request to the server, the default is POST, GET is also available.
+
+## onSelected
+
+Whenever an entry is selected, either by typing, autocomplete, pressing enter or selecting by hand, this event is triggered. It's triggered on both, the seeker and it's peer seeker, so you only need to handle this event once, in either seeker.
+
+## visibleFields
+
+If you have objects with way too many attributes, you can specify a list of attributes you want to show, in the order you want them to be shown
+
+## order
+
+If you want to order the source by a field, by default it orders by seekField but you can set the orderBy property to sort by another field.
+This can be either 'ASC', 'DESC' or null if you don't want to order.
+
+## peerSeeker
+
+Seekers are normally shown in pairs, peer seekers display the same source, but they have different seekFields, this is useful if you want an user to select an item by many fields, for example, if you have a list of colors, you might want them to select by hexadecimal code, or color name (Red or #FF0000)
+
+## width
+
+The width of the input field of the seeker
+
+## autocompleteInterval
+
+When the user types something on the seeker, the popup will filter the source so the user can select whatever she wants, if the user doesn't select anything for a while, it will autocomplete with the first item in the filtered source.
+
+## orderBy
+
+This is used in conjunction with _order_, you can specify the field to order the source by that field.
+
+## maxFieldLength
+
+If you have a field which is really long but you want to show it anyways, you can set a max field, it will truncate all the fields longer than the specified lenth, and add '...' at the end.
+
+## dropDownSameWidth
+
+If specified, it will force the drop-down to be the same width than the input
+
+## columnsWidth
+
+Sets the width of each column of the table individually. This is an array. For example
+
+<pre><code>{
+	...
+	columnsWidth: [50, 100, 20] // This is ordered the same as the table columns
+}}</code></pre>
 
 # Public Methods
 
