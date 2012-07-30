@@ -80,7 +80,8 @@ var __jquerySeekerPluginAjaxCache = [];
 			autocompleteInterval: 2000,	// Ammount of milliseconds to wait before trying to autocomplete the seeker, set to 0 to disable it
 			orderBy: undefined,			// If you want to sort by a field that's not the seekField
 			maxFieldLength: 0,			// If you want to truncate the values, length of characters allowed, 0 to disable
-			dropDownSameWidth: true		// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
+			dropDownSameWidth: true,	// If you want to automatically make the drop down the same size as the input. The min width is defined at the css though. You can use this together with maxFieldLength
+			columnsWidth: []			// The width of the table columns
 		}, options);
 
 		// Public attributes
@@ -199,11 +200,20 @@ var __jquerySeekerPluginAjaxCache = [];
 		};
 
 		this._buildTable = function(data) {
-			var row, obj, i, j, item, table, field, helper;
+			var row, obj, i, j, item, table, field, helper, colWidth, totalWidth;
 
 			helper = new Helper();
 			table = $('#' + this.id + '-table');
 			table.empty();
+
+			if(this.settings.columnsWidth.length > 0) {
+				totalWidth = 0;
+				for(i = 0; i < this.settings.columnsWidth.length; i++) {
+					totalWidth += this.settings.columnsWidth[i];
+				}
+				// Force the table width, ignoring the CSS file
+				table.css('width', totalWidth + 'px');
+			}
 
 			for(i = 0; i < data.length; i++) {
 				row = '<tr ' + ((this.selectedIndex > -1 && i === this.selectedIndex) ? 'class="seeker-selected"' : '') + ' id="' + id + '-' + i + '">';
@@ -212,17 +222,35 @@ var __jquerySeekerPluginAjaxCache = [];
 				if(this.settings.visibleFields.length > 0) {
 					j = 1;
 					for(field in this.settings.visibleFields) {
+						// Check for column width
+						colWidth = '';
+						if(this.settings.columnsWidth[j - 1] !== undefined) {
+							colWidth = ' width="' + this.settings.columnsWidth[j - 1] + '" ';
+						}
+
 						if(obj[this.settings.visibleFields[field]]) {
-							row += '<td class="col-' + j + '">' + helper.parseField(obj[this.settings.visibleFields[field]], this.settings.maxFieldLength) + '</td>';
+							row += '<td class="col-' + j + '" ' + colWidth + '>' + helper.parseField(obj[this.settings.visibleFields[field]], this.settings.maxFieldLength) + '</td>';
 							j++;
 						}
 					}
 				} else {
-					row += '<td class="col-1">' + helper.parseField(obj[this.settings.seekField], this.settings.maxFieldLength) + '</td>';
+					// Check for column width
+					colWidth = '';
+					if(this.settings.columnsWidth && this.settings.columnsWidth[0]) {
+						colWidth = ' width="' + this.settings.columnsWidth[0] + '" ';
+					}
+
+					row += '<td class="col-1" ' + colWidth + '>' + helper.parseField(obj[this.settings.seekField], this.settings.maxFieldLength) + '</td>';
 					j = 1;
 					for(item in obj) {
+						// Check for column width
+						colWidth = '';
+						if(this.settings.columnsWidth[j] !== undefined) {
+							colWidth = ' width="' + this.settings.columnsWidth[j] + '" ';
+						}
+
 						if(obj[item] && item !== this.settings.seekField) {
-							row += '<td class="col-' + j + '">' + helper.parseField(obj[item], this.settings.maxFieldLength) + '</td>';
+							row += '<td class="col-' + j + '" ' + colWidth + '>' + helper.parseField(obj[item], this.settings.maxFieldLength) + '</td>';
 							j++;
 						}
 					}
