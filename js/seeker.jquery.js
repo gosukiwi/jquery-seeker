@@ -141,6 +141,19 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			this.settings.peerSeeker = seeker;
 		};
 
+		// Sets the source of the seeker, and updates the table
+		this.setSource = function(arr) {
+			this.settings.source = arr;
+			this.source = [];
+			this.selectedIndex = -1;
+			for(i = 0; i < this.settings.source.length; i++) { 
+				// Copy manually, arrays are passed by reference, and if I share a variable to instantiate several seekers it will break!
+				this.source.push(this.settings.source[i]);
+			}
+			this._buildTable(this.source);
+			this.val('');
+		}
+
 		// Private methods
 		this._filterSource = function(text) {
 			var i, item;
@@ -247,7 +260,7 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			});
 		} else {
 			for(i = 0; i < this.settings.source.length; i++) { 
-				// Copy manually, arrays are passed by reference, and if I share a variable to instantate several seekers it will break
+				// Copy manually, arrays are passed by reference, and if I share a variable to instantiate several seekers it will break!
 				this.source.push(this.settings.source[i]);
 			}
 		}

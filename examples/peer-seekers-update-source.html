@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Seeker</title>
+	<script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="../js/seeker.jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/seeker.css">
+	<!--[if lt IE 9]>
+		<link rel="stylesheet" type="text/css" href="../css/seeker-ie.css" />
+	<![endif]-->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var source = [
+				{ name: "Mike Johnson", age: "20" },
+				{ name: "John Mikenson", age: "22" },
+				{ name: "Amy Danyson", age: "22" },
+				{ name: "Dan Amyson", age: "21" },
+				{ name: "Andy Andyson", age: "24" }
+			];
+
+			var source2 = [
+				{ name: "Augusto", age: "20" },
+				{ name: "Juan", age: "22" },
+				{ name: "Pedro", age: "25" },
+				{ name: "Luciano", age: "27" },
+			];
+
+			var ageSeeker = $('#seekerAge').seeker({
+				'source': source,
+				seekField: 'age',
+				width: 100
+			});
+
+			var nameSeeker = $('#seekerName').seeker({
+				'source': source,
+				seekField: 'name'
+			});	
+
+			ageSeeker.setPeerSeeker(nameSeeker);
+			nameSeeker.setPeerSeeker(ageSeeker);
+
+			function updateSource() {
+				nameSeeker.setSource(source2);
+				ageSeeker.setSource(source2);
+			}
+
+			// Update the source
+			setTimeout(updateSource, 3000);
+		});
+	</script>
+</head>
+<body>
+	<h1>Update seeker's source</h1>
+	<p>In this example you can see how to update a seeker's source</p>
+
+	<input id="seekerAge" type="text" /> 
+	<input id="seekerName" type="text" /> 
+</body>
+</html>
