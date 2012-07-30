@@ -104,6 +104,8 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			return undefined;
 		};
 
+		// Sets the selected item of the seeker. 
+		// Note that it makes a deep comparison!
 		this.setSelectedItem = function(item) {
 			var index, result, helper;
 
@@ -135,8 +137,23 @@ Copyright: Paradigma Del Sur - http://paradigma.com.ar
 			// Rebuild table so the selected item is updated
 			table = $('#' + this.id + '-table').hide();
 			this._buildTable(this.source);
+
+			if(this.settings.peerSeeker && !helper.deepEqual(this.settings.peerSeeker.getSelectedItem(), item)) {
+				this.settings.peerSeeker.setSelectedItem(item);
+			}
 		};
 
+		// Sets the selected index of the seeker
+		this.setSelectedIndex = function(index) {
+			this.source[index] && this.setSelectedItem(this.source[index]);
+		};
+
+		// Gets the selected index of the seeker
+		this.getSelectedIndex = function() {
+			return this.selectedIndex;
+		}
+
+		// Sets the peer seeker of this instance
 		this.setPeerSeeker = function(seeker) {
 			this.settings.peerSeeker = seeker;
 		};

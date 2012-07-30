@@ -82,6 +82,20 @@ Used to set a peer seeker. Peer sekers are bound by selected item, this means, e
 
 Gets the selected item. This method shouldn't be necessary as whenever an item is selected, your callback function will be executed with the selected item itself, but it's included for the sake of completeness. You might want to do some complicated behaviour, in which case, you can use this function.
 
+<pre><code>var item = mySeeker.getSelectedItem();</code></pre>
+
+## setSelectedIndex
+
+Sets the selected index of the seeker, it also updates the peer seeker.
+
+<pre><code>mySeeker.setSelectedIndex(0); // select the first item by default</code></pre>
+
+## getSelectedIndex
+
+Gets the selected index of the seeker
+
+<pre><code>var selectedIndex = mySeeker.getSelectedIndex();</code></pre>
+
 ## setSource
 
 This method lets you update the source of the seeker. Remember to update it on the peer seeker too!
