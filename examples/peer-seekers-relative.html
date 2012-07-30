@@ -37,6 +37,26 @@
 
 			ageSeeker.setPeerSeeker(nameSeeker);
 			nameSeeker.setPeerSeeker(ageSeeker);
+
+			var ageSeeker2 = $('#seekerAge2').seeker({
+				'source': source,
+				seekField: 'age',
+				width: 100,
+				onSelected: function(index, item) {
+					
+				}
+			});
+
+			var nameSeeke2r = $('#seekerName2').seeker({
+				'source': source,
+				seekField: 'name',
+				onSelected: function() {
+
+				}
+			});
+
+			ageSeeke2r.setPeerSeeker(nameSeeker2);
+			nameSeeker2.setPeerSeeker(ageSeeker2);
 		});
 	</script>
 </head>
@@ -48,5 +68,8 @@
 	<input id="seekerName" type="text" /> 
 
 	<p>Lorem ipsum dolor sit amet</p>
+
+	<input id="seekerAge2" type="text" /> 
+	<input id="seekerName2" type="text" /> 
 </body>
 </html>
